@@ -3,8 +3,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/db.js';
 import userRoutes from './routes/user.routes.js';
+import seccionRoutes from './routes/seccion.routes.js';
 
-dotenv.config();
+dotenv.config(); 
 
 const app = express();
 app.use(cors());
@@ -14,7 +15,8 @@ app.use(express.json());
 connectDB();
 
 // Rutas
-app.use('/api/users', userRoutes);
+app.use('/api/usuarios', userRoutes);
+app.use('/api/secciones', seccionRoutes); 
 
 // Puerto
 const PORT = process.env.PORT || 5000;
