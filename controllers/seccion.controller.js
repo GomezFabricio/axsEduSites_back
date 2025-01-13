@@ -1,10 +1,11 @@
 import Seccion from '../models/seccion.js';
 import TipoSeccion from '../models/tipoSeccion.js';
+import Equipo from '../models/equipo.js';
 
 // Obtener todas las secciones
 export const getSecciones = async (req, res) => {
   try {
-    const secciones = await Seccion.find().populate('tipo_seccion_id', 'nombre');
+    const secciones = await Seccion.find().populate('tipo_seccion_id', 'nombre').populate('equipo');
     res.json(secciones);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -13,7 +14,7 @@ export const getSecciones = async (req, res) => {
 
 // Crear una nueva sección
 export const createSeccion = async (req, res) => {
-  const { nombre, tipo_seccion_id, contenido, orden } = req.body;
+  const { nombre, tipo_seccion_id, contenido, orden, equipo } = req.body;
 
   if (!nombre || !tipo_seccion_id || !contenido || orden === undefined) {
     return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
@@ -25,7 +26,7 @@ export const createSeccion = async (req, res) => {
       return res.status(400).json({ message: 'Tipo de sección no válido.' });
     }
 
-    const newSeccion = new Seccion({ nombre, tipo_seccion_id, contenido, orden });
+    const newSeccion = new Seccion({ nombre, tipo_seccion_id, contenido, orden, equipo });
     await newSeccion.save();
     res.status(201).json(newSeccion);
   } catch (error) {
@@ -36,7 +37,7 @@ export const createSeccion = async (req, res) => {
 // Actualizar una sección
 export const updateSeccion = async (req, res) => {
   const { id } = req.params;
-  const { nombre, tipo_seccion_id, contenido, orden } = req.body;
+  const { nombre, tipo_seccion_id, contenido, orden, equipo } = req.body;
 
   try {
     const seccion = await Seccion.findById(id);
@@ -48,6 +49,7 @@ export const updateSeccion = async (req, res) => {
     if (tipo_seccion_id) seccion.tipo_seccion_id = tipo_seccion_id;
     if (contenido) seccion.contenido = contenido;
     if (orden !== undefined) seccion.orden = orden;
+    if (equipo) seccion.equipo = equipo;
 
     await seccion.save();
     res.json(seccion);
