@@ -5,6 +5,7 @@ const seccionSchema = new mongoose.Schema({
   tipo_seccion_id: { type: mongoose.Schema.Types.ObjectId, ref: 'TipoSeccion', required: true },
   contenido: { type: Map, of: String, required: true },
   equipo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Equipo' }],
+  orden_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Orden' }, // Relación con Orden
 });
 
 const Seccion = mongoose.model('Seccion', seccionSchema);
