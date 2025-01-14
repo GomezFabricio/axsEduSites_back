@@ -13,9 +13,9 @@ export const getEquipo = async (req, res) => {
 
 // Crear un nuevo miembro del equipo
 export const createEquipo = async (req, res) => {
-  const { nombre, foto, funcion, descripcion, orden } = req.body;
+  const { nombre, foto, funcion, descripcion } = req.body;
 
-  if (!nombre || !foto || !funcion || !descripcion || orden === undefined) {
+  if (!nombre || !foto || !funcion || !descripcion) {
     return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
   }
 
@@ -25,7 +25,7 @@ export const createEquipo = async (req, res) => {
       return res.status(400).json({ message: 'Función no válida.' });
     }
 
-    const newEquipo = new Equipo({ nombre, foto, funcion, descripcion, orden });
+    const newEquipo = new Equipo({ nombre, foto, funcion, descripcion });
     await newEquipo.save();
     res.status(201).json(newEquipo);
   } catch (error) {
@@ -36,7 +36,7 @@ export const createEquipo = async (req, res) => {
 // Actualizar un miembro del equipo
 export const updateEquipo = async (req, res) => {
   const { id } = req.params;
-  const { nombre, foto, funcion, descripcion, orden } = req.body;
+  const { nombre, foto, funcion, descripcion } = req.body;
 
   try {
     const equipo = await Equipo.findById(id);
@@ -48,7 +48,6 @@ export const updateEquipo = async (req, res) => {
     if (foto) equipo.foto = foto;
     if (funcion) equipo.funcion = funcion;
     if (descripcion) equipo.descripcion = descripcion;
-    if (orden !== undefined) equipo.orden = orden;
 
     await equipo.save();
     res.json(equipo);

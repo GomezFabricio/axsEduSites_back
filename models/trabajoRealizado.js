@@ -5,7 +5,6 @@ const trabajoRealizadoSchema = new mongoose.Schema({
   descripcion: { type: String, required: true },
   imagenes: [{ type: String, required: true }],
   fecha_creacion: { type: Date, default: Date.now, required: true },
-  orden: { type: Number, required: true },
 });
 
 const TrabajoRealizado = mongoose.model('TrabajoRealizado', trabajoRealizadoSchema);
