@@ -1,12 +1,11 @@
 import Seccion from '../models/seccion.js';
 import TipoSeccion from '../models/tipoSeccion.js';
-import Equipo from '../models/equipo.js';
 import Orden from '../models/orden.js';
 
 // Obtener todas las secciones
 export const getSecciones = async (req, res) => {
   try {
-    const secciones = await Seccion.find().populate('tipo_seccion_id', 'nombre').populate('equipo').populate('orden_id');
+    const secciones = await Seccion.find().populate('tipo_seccion_id', 'nombre').populate('orden_id');
     res.json(secciones);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -15,7 +14,7 @@ export const getSecciones = async (req, res) => {
 
 // Crear una nueva sección
 export const createSeccion = async (req, res) => {
-  const { nombre, tipo_seccion_id, contenido, equipo, ordenGeneral, ordenIndividual } = req.body;
+  const { nombre, tipo_seccion_id, contenido, ordenGeneral, ordenIndividual } = req.body;
 
   if (!nombre || !tipo_seccion_id || !contenido || ordenGeneral === undefined || ordenIndividual === undefined) {
     return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
@@ -30,7 +29,7 @@ export const createSeccion = async (req, res) => {
     const newOrden = new Orden({ ordenGeneral, ordenIndividual });
     await newOrden.save();
 
-    const newSeccion = new Seccion({ nombre, tipo_seccion_id, contenido, equipo, orden_id: newOrden._id });
+    const newSeccion = new Seccion({ nombre, tipo_seccion_id, contenido, orden_id: newOrden._id });
     await newSeccion.save();
     res.status(201).json(newSeccion);
   } catch (error) {
@@ -41,7 +40,7 @@ export const createSeccion = async (req, res) => {
 // Actualizar una sección
 export const updateSeccion = async (req, res) => {
   const { id } = req.params;
-  const { nombre, tipo_seccion_id, contenido, equipo, ordenGeneral, ordenIndividual } = req.body;
+  const { nombre, tipo_seccion_id, contenido, ordenGeneral, ordenIndividual } = req.body;
 
   try {
     const seccion = await Seccion.findById(id).populate('orden_id');
@@ -52,7 +51,6 @@ export const updateSeccion = async (req, res) => {
     if (nombre) seccion.nombre = nombre;
     if (tipo_seccion_id) seccion.tipo_seccion_id = tipo_seccion_id;
     if (contenido) seccion.contenido = contenido;
-    if (equipo) seccion.equipo = equipo;
 
     if (ordenGeneral !== undefined || ordenIndividual !== undefined) {
       const orden = await Orden.findById(seccion.orden_id);
